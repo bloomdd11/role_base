@@ -3,6 +3,7 @@ const mongoose = require('mongoose')
 const postSchema = new mongoose.Schema({
   title: {
     type: String,
+    required: true,
   },
   date: {
     type: Date,
@@ -10,7 +11,7 @@ const postSchema = new mongoose.Schema({
   },
   postBy: {
     type: mongoose.Schema.Types.ObjectId,
-    ref: "User",
+    ref: "Users",
   },
 })
 
