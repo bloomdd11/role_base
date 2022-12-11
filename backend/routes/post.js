@@ -7,7 +7,7 @@ const { body, validationResult, param } = require('express-validator')
 // GET ALL POSTS
 router.get('/', async (req, res) => {
   const post = await Post.find().populate('postBy')
-  return res.json({ meta: { return: true, length: post.length }, msg: post })
+  return res.json({ meta: { return: true, length: post.length, request: req.user }, msg: post })
 })
 
 // GET SPECIFIC POST

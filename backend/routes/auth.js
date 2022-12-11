@@ -34,23 +34,23 @@ router.post('/login', [
 ], async (req, res) => {
   const errors = validationResult(req)
   if (!errors.isEmpty()) {
-    throw new CustomAPIError('invalid value', 400)
+    throw new CustomAPIError('Please provide username and password', 400)
   }
 
   const { username, password } = req.body
-  const [user] = await User.find({ username })
-  if (user.length === 0) {
-    throw new CustomAPIError('No user is found with that name', 404)
+  const user = await User.findOne({ username })
+  if (!user) {
+    throw new CustomAPIError('Invalid Credentials', 404)
   }
 
-  const checkPWD = await bcrpyt.compare(password, user.password)
+  let checkPWD = await user.comparePassword(password)
   if (!checkPWD) {
     throw new CustomAPIError('Incorrect password', 400)
   }
 
-  const token = jwt.sign({ userID: user.__id, role: user.role }, 'JWTSECRET')
+  const token = user.createJWT()
 
-  return res.json({ return: true, msg: token })
+  return res.json({ return: true, token })
 })
 
 module.exports = router
