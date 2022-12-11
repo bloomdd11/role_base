@@ -1,10 +1,10 @@
 const express = require('express')
 const router = express.Router()
+const CustomAPIError = require('../middleware/custom-api')
+const User = require('../model/User')
 const bcrpyt = require('bcrypt')
 const jwt = require('jsonwebtoken')
 const { body, validationResult } = require('express-validator')
-const CustomAPIError = require('../middleware/custom-api')
-const User = require('../model/User')
 
 router.post('/signup', [
   body('username').not().isEmpty(),

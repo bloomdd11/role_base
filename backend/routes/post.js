@@ -1,8 +1,8 @@
 const express = require('express')
 const router = express.Router()
-const { body, validationResult, param } = require('express-validator')
 const CustomAPIError = require('../middleware/custom-api')
 const Post = require('../model/Post')
+const { body, validationResult, param } = require('express-validator')
 
 // GET ALL POSTS
 router.get('/', async (req, res) => {
@@ -61,8 +61,14 @@ router.put('/:id', [
 
   const { title } = req.body
   const { id: postID } = req.params
+
+  let post = await Post.findById({ _id: postID })
+  if (!post) {
+    throw new CustomAPIError('no post with that id is found', 400)
+  }
+
   const temp_post = { title }
-  const post = await Post.findByIdAndUpdate({ _id: postID }, temp_post, { new: true })
+  post = await Post.findByIdAndUpdate({ _id: postID }, temp_post, { new: true })
 
   try {
     await post.save()
