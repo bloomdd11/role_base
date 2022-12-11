@@ -6,7 +6,10 @@ const { body, validationResult, param } = require('express-validator')
 
 // GET ALL POSTS
 router.get('/', async (req, res) => {
+  const { userID, username, role } = req.user
+
   const post = await Post.find().populate('postBy')
+  // const post = await Post.find({ postBy: { _id: userID } }).populate('postBy')
   return res.json({ meta: { return: true, length: post.length, request: req.user }, msg: post })
 })
 
@@ -20,7 +23,7 @@ router.get('/:id', [
   }
 
   const { id: postID } = req.params
-  const post = await Post.findById({ _id: postID })
+  const post = await Post.findById({ _id: postID }).populate('postBy')
   if (!post) {
     throw new CustomAPIError('no post with that id is found', 404)
   }
@@ -37,8 +40,9 @@ router.post('/', [
     throw new CustomAPIError('please enter title name', 400)
   }
 
+  const { userID, username, role } = req.user
   const { title } = req.body
-  const temp_post = { title }
+  const temp_post = { title, postBy: userID }
   const post = new Post(temp_post)
 
   try {

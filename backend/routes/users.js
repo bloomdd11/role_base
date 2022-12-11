@@ -4,12 +4,18 @@ const CustomAPIError = require('../middleware/custom-api')
 const User = require('../model/User')
 const { body, validationResult, param } = require('express-validator')
 
+
 // GET ALL USERS
 router.get('/', async (req, res) => {
+  // 
+  // 
+  // 
+  const { userID, username, role } = req.user
+  // 
+  // 
+  // 
   const users = await User.find()
-
-
-  return res.json({ meta: { return: true, length: users.length }, msg: users })
+  return res.json({ meta: { return: true, length: users.length, currentUser: req.user }, msg: users })
 })
 
 // GET SPECIFIC USERS

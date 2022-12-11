@@ -24,7 +24,7 @@ app.get('/', (req, res) => {
 })
 app.use('/api/v1', auth)
 app.use('/api/v1/posts', authMiddleware, post)
-app.use('/api/v1/users', users)
+app.use('/api/v1/users', authMiddleware, users)
 
 
 // LISTEN 
