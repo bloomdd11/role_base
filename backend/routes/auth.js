@@ -1,6 +1,7 @@
 const express = require('express')
 const router = express.Router()
 const bcrpyt = require('bcrypt')
+const jwt = require('jsonwebtoken')
 const { body, validationResult } = require('express-validator')
 const CustomAPIError = require('../middleware/custom-api')
 const User = require('../model/User')
@@ -47,7 +48,9 @@ router.post('/login', [
     throw new CustomAPIError('Incorrect password', 400)
   }
 
-  return res.json({ return: true, msg: user })
+  const token = jwt.sign({ userID: user.__id, role: user.role }, 'JWTSECRET')
+
+  return res.json({ return: true, msg: token })
 })
 
 module.exports = router
